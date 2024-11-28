@@ -29,9 +29,7 @@ router.get("/posts", async function (req, res) {
 });
 
 router.get("/new-post", async function (req, res) {
-  try {
-    console.log("Attempting to fetch authors from the database...");
-    const [authors] = await db.query("SELECT * FROM authors");
+ const [authors] = await db.query("SELECT * FROM authors");
     console.log("Authors fetched successfully:", authors);
     res.render("create-post", { authors: authors });
   } catch (error) {
