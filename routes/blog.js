@@ -8,18 +8,6 @@ router.get("/", function (req, res) {
 });
 
 router.get("/posts", async function (req, res) {
-  // try {
-  //   const query = `
-  //     SELECT posts.*,
-  //     authors.name AS author_name
-  //     FROM posts
-  //     INNER JOIN authors ON posts.author_id = authors.idauthors`;
-  //   const [posts] = await db.query(query);
-  //   res.render("posts-list", { posts: posts });
-  // } catch (error) {
-  //   console.error("Error fetching posts:", error);
-  //   res.status(500).send("Internal Server Error");
-  // }
   const query = `
   SELECT posts.*, authors.name AS author_name 
   FROM posts
@@ -29,39 +17,20 @@ router.get("/posts", async function (req, res) {
 });
 
 router.get("/new-post", async function (req, res) {
- const [authors] = await db.query("SELECT * FROM authors");
-    console.log("Authors fetched successfully:", authors);
-    res.render("create-post", { authors: authors });
-  } catch (error) {
-    console.error("Error fetching authors:", error);
-    res.status(500).send("Internal Server Error");
-  }
+  const [authors] = await db.query("SELECT * FROM authors");
+  res.render("create-post", { authors: authors });
 });
 
 router.post("/posts", async function (req, res) {
   const { title, summary, content, author } = req.body;
-
-  console.log("Request body:", req.body); // Log the request body
-
-  // Validate author_id
-  const authorId = parseInt(author, 10);
-  if (isNaN(authorId) || authorId <= 0) {
-    return res.status(400).json({ message: "Invalid or missing author ID" });
-  }
-
-  const data = [title, summary, content, authorId];
-
   try {
-    const result = await db.query(
+    await db.query(
       "INSERT INTO posts (title, summary, body, author_id) VALUES (?, ?, ?, ?)",
-      data,
+      [title, summary, content, author],
     );
-    res.redirect("/posts");
   } catch (error) {
-    console.error("Error saving post:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to create post", error: error.message });
+    console.log(error);
+    res.render("500");
   }
 });
 
