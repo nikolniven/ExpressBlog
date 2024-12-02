@@ -11,7 +11,7 @@ router.get("/posts", async function (req, res) {
   const query = `
   SELECT posts.*, authors.name AS author_name 
   FROM posts
-  INNER JOIN authors ON posts.author_id = authors.idauthors`;
+  INNER JOIN authors ON posts.author_id = authors.idauthors ORDER BY posts.date DESC `;
   const [posts] = await db.query(query);
   res.render("posts-list", { posts: posts });
 });
