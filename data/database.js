@@ -4,7 +4,7 @@ const myPool = mysql.createPool({
   host: "localhost",
   database: "blog",
   user: "root",
-  password: "November_2125",
+  password: "December_mammamia",
 });
 
 async function query(sql, params) {
