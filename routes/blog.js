@@ -32,14 +32,15 @@ router.post("/posts", async function (req, res) {
     console.log(error);
     res.render("500");
   }
+  res.redirect("/posts");
 });
 
-router.get("/posts/:iddop", async function (req, res) {
+router.get("/posts/:id", async function (req, res) {
   const query = `
   SELECT posts.*, authors.name AS author_name, authors.email AS author_email FROM posts
   INNER JOIN authors ON posts.author_id = authors.idauthors
   WHERE posts.id = ? `;
-  const [posts] = await db.query(query, [req.params.iddop]);
+  const [posts] = await db.query(query, [req.params.id]);
   if (!posts || posts.length === 0) {
     return res.status(404).render("404");
   }
@@ -69,7 +70,7 @@ router.get("/posts/:id/edit", async function (req, res) {
   res.render("update-post", { post: posts[0] });
 });
 
-router.post("/posts/:idd/edit", async function (req, res) {
+router.post("/posts/:id/edit", async function (req, res) {
   const query = `
   UPDATE posts SET title = ?, summary = ?, body = ?
   WHERE id = ?
@@ -78,7 +79,7 @@ router.post("/posts/:idd/edit", async function (req, res) {
     req.body.title,
     req.body.summary,
     req.body.content,
-    req.params.idd,
+    req.params.id,
   ]);
 
   res.redirect("/posts");
